@@ -1,17 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Nov 10 12:12:22 2025
-
-@author: ziyautkukaradeniz
-"""
-
-"""
-Discounted Cash Flow (DCF) Calculator with Visualizations
-A command-line tool for valuing companies using the DCF method.
-Fetches company data from yfinance and creates comprehensive visualizations.
-"""
-
 import yfinance as yf
 import sys
 import numpy as np
@@ -21,7 +7,6 @@ import seaborn as sns
 from typing import Optional, Dict, Tuple
 from matplotlib.patches import Rectangle
 
-# Set plotting style
 sns.set_style("whitegrid")
 plt.rcParams['figure.figsize'] = (12, 8)
 
@@ -319,7 +304,6 @@ def create_visualizations(ticker: str, inputs: Dict, company_data: Dict,
     # 1. Sensitivity Analysis Heatmap (WACC vs Perpetual Growth)
     ax1 = plt.subplot(2, 3, 1)
     
-    # Create sensitivity ranges
     wacc_range = np.linspace(wacc * 0.8, wacc * 1.2, 7)
     growth_range = np.linspace(inputs['perpetual_growth'] * 0.5, 
                                min(inputs['perpetual_growth'] * 1.5, wacc * 0.9), 7)
@@ -359,7 +343,6 @@ def create_visualizations(ticker: str, inputs: Dict, company_data: Dict,
     categories = ['Enterprise\nValue', 'Less: Debt', 'Plus: Cash', 'Equity\nValue']
     values = [enterprise_value, -company_data['total_debt'], company_data['cash'], equity_value]
     
-    # Calculate cumulative values for waterfall
     cumulative = [enterprise_value]
     cumulative.append(cumulative[-1] - company_data['total_debt'])
     cumulative.append(cumulative[-1] + company_data['cash'])
@@ -372,12 +355,10 @@ def create_visualizations(ticker: str, inputs: Dict, company_data: Dict,
     ax2.bar(2, company_data['cash'], bottom=cumulative[1], color=colors[2], alpha=0.8, edgecolor='black')
     ax2.bar(3, equity_value, color=colors[3], alpha=0.8, edgecolor='black')
     
-    # Add connecting lines
     for i in range(len(cumulative) - 1):
         ax2.plot([i + 0.4, i + 0.6], [cumulative[i], cumulative[i]], 
                 'k--', linewidth=1, alpha=0.5)
     
-    # Add value labels
     ax2.text(0, enterprise_value/2, format_currency(enterprise_value), 
             ha='center', va='center', fontweight='bold', fontsize=9)
     ax2.text(1, cumulative[0] - company_data['total_debt']/2, format_currency(-company_data['total_debt']), 
@@ -402,7 +383,6 @@ def create_visualizations(ticker: str, inputs: Dict, company_data: Dict,
     bars = ax3.bar(years, pv_values, color=['#4A90E2' for _ in pv_fcff_list] + ['#E24A4A'], 
                    alpha=0.8, edgecolor='black')
     
-    # Add value labels on bars
     for bar, val in zip(bars, pv_values):
         height = bar.get_height()
         ax3.text(bar.get_x() + bar.get_width()/2., height,
@@ -425,14 +405,12 @@ def create_visualizations(ticker: str, inputs: Dict, company_data: Dict,
         
         bars = ax4.bar(labels, prices, color=colors_price, alpha=0.8, edgecolor='black', width=0.6)
         
-        # Add value labels
         for bar, price in zip(bars, prices):
             height = bar.get_height()
             ax4.text(bar.get_x() + bar.get_width()/2., height,
                     f'${price:.2f}',
                     ha='center', va='bottom', fontsize=12, fontweight='bold')
         
-        # Add upside/downside annotation
         upside = ((intrinsic_value - company_data['current_price']) / company_data['current_price']) * 100
         ax4.text(0.5, max(prices) * 0.5, f"Upside: {upside:+.1f}%", 
                 ha='center', fontsize=14, fontweight='bold',
@@ -467,7 +445,6 @@ def create_visualizations(ticker: str, inputs: Dict, company_data: Dict,
             color='#2ECC71', label='Forecasted FCFF')
     ax6.axhline(y=base_fcff, color='#E67E22', linestyle='--', linewidth=2, label='Base Year FCFF')
     
-    # Add value labels on points
     for x, y in zip(years_fcff, forecasted_fcff):
         ax6.text(x, y, format_currency(y), ha='center', va='bottom', fontsize=8, fontweight='bold')
     
@@ -481,7 +458,6 @@ def create_visualizations(ticker: str, inputs: Dict, company_data: Dict,
                 fontsize=16, fontweight='bold', y=0.995)
     plt.tight_layout()
     
-    # Save figure
     filename = f'{ticker}_DCF_Analysis.png'
     plt.savefig(filename, dpi=300, bbox_inches='tight')
     print(f"\n✓ Visualizations saved as: {filename}")
