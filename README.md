@@ -44,26 +44,6 @@ All visualizations are saved as a high-resolution PNG dashboard for easy sharing
 
 ---
 
-## 🚀 Installation
-
-### Clone the Repository
-```bash
-git clone https://github.com/yourusername/dcf-valuation-calculator.git
-cd dcf-valuation-calculator
-```
-
-### Install Dependencies
-```bash
-pip install -r requirements.txt
-```
-
-Or install manually:
-```bash
-pip install yfinance numpy pandas matplotlib seaborn
-```
-
----
-
 ## 💻 Quick Start
 
 ### Run the Calculator
@@ -383,63 +363,6 @@ Share Price = Equity Value / Shares Outstanding
 
 ---
 
-## 🛠️ Customization & Advanced Usage
-
-### Modifying FCFF Growth
-Edit the `forecast_fcff()` function for custom growth logic:
-
-```python
-def forecast_fcff(base_fcff: float, forecast_years: int, short_term_growth: Optional[float] = None) -> list:
-    # Current: Linear growth rate
-    # Modify: Add declining growth rate, step-function, or company-specific logic
-```
-
-### Changing Visualization Style
-Customize colors and styling in `create_visualizations()`:
-
-```python
-# Edit color palettes
-colors = ['#4A90E2', '#E24A4A', ...]  # Change hex codes for your branding
-
-# Adjust figure size
-plt.rcParams['figure.figsize'] = (14, 10)  # Default is 20x12
-```
-
-### Batch Analysis
-Create a wrapper to run DCF on multiple tickers:
-
-```python
-import subprocess
-import json
-
-tickers = ['MSFT', 'AAPL', 'GOOGL']
-assumptions = {
-    'risk_free_rate': 4.2,
-    'equity_risk_premium': 5.5,
-    'forecast_years': 5,
-    'perpetual_growth': 2.5
-}
-
-# Automate inputs
-for ticker in tickers:
-    result = subprocess.run(['python', 'dcf_viz.py'], 
-                          input=f"{ticker}\n4.2\n5.5\n5\n2.5\n", 
-                          text=True)
-```
-
-### Adding New Calculations
-Extend the script with additional metrics:
-
-```python
-def calculate_fcff_margin(fcff: float, revenue: float) -> float:
-    return fcff / revenue
-
-def calculate_fcf_yield(fcff: float, market_cap: float) -> float:
-    return fcff / market_cap
-```
-
----
-
 ## 📚 Resources & References
 
 ### Learning Materials
@@ -457,50 +380,6 @@ def calculate_fcf_yield(fcff: float, market_cap: float) -> float:
 - Fama, French (2004): "The Capital Asset Pricing Model: Expectations and Reality"
 - Brealey, Myers, Allen: "Principles of Corporate Finance" (Chapters on DCF)
 - Damodaran: "Damodaran on Valuation" (Comprehensive DCF textbook)
-
----
-
-## 🐛 Troubleshooting
-
-### Issue: "WACC must be greater than perpetual growth rate"
-**Cause**: Perpetual growth rate ≥ WACC; model mathematically invalid
-**Solution**: 
-- Lower perpetual growth rate (try 2% for developed markets)
-- Increase risk-free rate or ERP
-- Increase company beta
-- Check tax rate (may be too low, inflating WACC)
-
-### Issue: "Could not fetch financials for [TICKER]"
-**Cause**: Ticker invalid or company doesn't report to SEC
-**Solution**:
-- Verify ticker format (add exchange suffix if needed: `NESN.SW`)
-- Check if company is public and reports financials
-- Try alternative ticker format
-- For international stocks, ensure Yahoo Finance coverage
-
-### Issue: "Beta not available"
-**Cause**: Yahoo Finance doesn't have beta for this security
-**Solution**: Script defaults to beta = 1.0 (market risk). Consider:
-- Manually overriding in code with industry average
-- Using [Damodaran's industry betas](http://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/Betas.html)
-- Calculating historical beta from returns
-
-### Issue: Terminal Value is negative
-**Cause**: WACC too close to perpetual growth rate
-**Solution**: See solution to first issue above
-
-### Issue: Visualizations not displaying / saving
-**Cause**: matplotlib backend issue
-**Solution**:
-```bash
-# Force backend in script or terminal
-export MPLBACKEND=Agg
-python dcf_viz.py
-
-# Or modify script:
-import matplotlib
-matplotlib.use('Agg')
-```
 
 ---
 
@@ -541,26 +420,6 @@ Short-term Growth: 3%
 
 Expected Result: Low WACC; stable dividend payer; capital-efficient business
 ```
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Areas for enhancement:
-- Multi-currency support
-- Industry-specific beta adjustments
-- Automated assumption sourcing
-- Integration with alternative data sources
-- Enhanced sensitivity analysis (tornado charts)
-- Portfolio batch analysis
-- Dashboard/web UI
-
-To contribute:
-1. Fork repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
 
 ---
 
