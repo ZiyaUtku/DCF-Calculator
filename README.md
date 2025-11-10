@@ -564,12 +564,6 @@ To contribute:
 
 ---
 
-## 📄 License
-
-This project is licensed under the MIT License - see LICENSE file for details.
-
----
-
 ## ⭐ Support
 
 If this tool helped you in your analysis, please:
